@@ -43,3 +43,29 @@ simpSub(X, 0, X).
 simpSub(0, X, X).
 simpSub(A, B, S) :- integer(A), integer(B), S is A - B.
 simpSub(A, X, A-X).
+
+%# ----------------------------------
+
+deriv(x, 1) :- !.
+deriv(C, 0) :- integer(C), !.
+deriv(C, 0) :0 atom(C), !.
+
+%# party_builder(_, []) :- party_builder(1, [klefstad]).
+
+party_seating([]).
+party_seating(L) :- findall(X, (male(X) ; female(X)), G),
+    permutation(G, L),
+    L = [First|_],
+    append(L, [First], Wrap),
+    valid_pairs(Wrap),
+    !.
+
+valid_pairs([_]).
+valid_pairs([A, B|T]) :-
+    speaks(A, Match),
+    speaks(B, Match),
+    \+ (female(A), female(B)),
+    valid_pairs([B|T]).
+
+
+
